@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.ChatApp.payloads.PostResponse;
 import com.project.ChatApp.payloads.PostsDto;
 import com.project.ChatApp.services.PostsService;
 
@@ -41,9 +43,13 @@ public class PostsController {
 	}
 	
 	@GetMapping("")
-	private ResponseEntity<List<PostsDto>>getAllPosts(){
-		List<PostsDto> postDto=this.postsService.getAllPosts();
-		return new ResponseEntity<List<PostsDto>>(postDto,HttpStatus.OK);
+	public PostResponse getAllPosts(
+	        @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+	        @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
+	        @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+	        @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
+		PostResponse postDto=this.postsService.getAllPosts(pageNumber,pageSize,sortBy,sortDir);
+		return postDto;
 	}
 	
 	@GetMapping("/{postId}")

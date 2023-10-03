@@ -7,6 +7,10 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.project.ChatApp.entities.Category;
@@ -14,6 +18,7 @@ import com.project.ChatApp.entities.Posts;
 import com.project.ChatApp.entities.User;
 import com.project.ChatApp.exceptions.ResourceNotFoundException;
 import com.project.ChatApp.payloads.CategoryDto;
+import com.project.ChatApp.payloads.PostResponse;
 import com.project.ChatApp.payloads.PostsDto;
 import com.project.ChatApp.payloads.UserDto;
 import com.project.ChatApp.repositories.CategoryRepository;
@@ -68,14 +73,24 @@ public class PostsServiceImpl implements PostsService {
 	}
 
 	@Override
-	public List<PostsDto> getAllPosts() {
+	public PostResponse getAllPosts(Integer pageNumber,Integer pageSize,String sortBy,String sortDir) {
 		// TODO Auto-generated method stub
-		List<Posts>posts=this.postsRepository.findAll();
+		Sort sort=(sortDir=="asc")?Sort.by(sortBy):Sort.by(sortBy).descending();
+		Pageable p=PageRequest.of(pageNumber, pageSize,sort);
+		Page<Posts>post=this.postsRepository.findAll(p);
+		List<Posts>posts=post.getContent();
 		List<PostsDto>postDtos=new ArrayList();
-		posts.forEach((post)->{
-			postDtos.add(this.modelMapper.map(post, PostsDto.class));
+		posts.forEach((postt)->{
+			postDtos.add(this.modelMapper.map(postt, PostsDto.class));
 		});
-		return postDtos;
+		PostResponse postResponse=new PostResponse();
+		postResponse.setContent(postDtos);
+		postResponse.setPageNumber(post.getNumber());
+		postResponse.setPageSize(post.getSize());
+		postResponse.setTotalElements(post.getNumberOfElements());
+		postResponse.setTotalPages(post.getTotalPages());
+		postResponse.setLastPage(post.isLast());
+		return postResponse;
 	}
 
 	@Override
