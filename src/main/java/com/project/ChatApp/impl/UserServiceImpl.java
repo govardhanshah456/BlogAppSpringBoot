@@ -7,6 +7,7 @@ import com.project.ChatApp.repositories.UserRepository;
 import com.project.ChatApp.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,10 +18,14 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepo;
     @Autowired
     private ModelMapper modelMapper;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public UserDto createUser(UserDto user) {
         User userr=new User();
         userr=this.userDtoToUser(user);
+        userr.setPassword(passwordEncoder.encode(user.getPassword()));
         this.userRepo.save(userr);
         return this.userToUserDto(userr);
     }
@@ -32,6 +37,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
         user.setAbout(userDto.getAbout());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepo.save(user);
         return this.userToUserDto(user);
     }

@@ -20,11 +20,11 @@ import com.project.ChatApp.services.CategoryService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/category")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-    @PostMapping("/create")
+    @PostMapping("/api/create")
     ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto category){
     	System.out.println(category.toString());
         CategoryDto newCategory= categoryService.createCategory(category);
@@ -41,13 +41,13 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/api/update/{id}")
     ResponseEntity<CategoryDto> updateUser(@RequestBody CategoryDto category,@PathVariable Long id){
     	System.out.print(category.toString());
         return ResponseEntity.ok(categoryService.updateCategory(category,id));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/api/delete/{id}")
     ResponseEntity<String> deleteUser(@PathVariable Long id){
         this.categoryService.deleteCategory(id);
         return ResponseEntity.ok("User Deleted Successfully!");

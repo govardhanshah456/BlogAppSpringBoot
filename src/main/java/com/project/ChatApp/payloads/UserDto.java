@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class UserDto {
-    private Long id;
+    private long id;
     @NotEmpty
     @Size(min=4,message="Username Should Be At Least 4 characters Long")
     private String username;
@@ -24,4 +24,5 @@ public class UserDto {
     @Email
     private String email;
     private String about;
+    private String password;
 }

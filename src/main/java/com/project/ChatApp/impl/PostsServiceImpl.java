@@ -46,10 +46,13 @@ public class PostsServiceImpl implements PostsService {
 		CategoryDto category=this.modelMapper.map(this.categoryRepository.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category","Id",categoryId)), CategoryDto.class);
 		UserDto user=this.modelMapper.map(this.userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId)), UserDto.class);
 		Posts post=this.modelMapper.map(postDto, Posts.class);
+		System.out.println(postDto.toString());
 		post.setCreatedAt(new Date());
 		post.setImageUrl(postDto.getImageUrl());
 		post.setCategory(this.modelMapper.map(category, Category.class));
 		post.setUser(this.modelMapper.map(user, User.class));
+		post.setTitle(postDto.getTitle());
+		post.setContent(postDto.getContent());
 		this.postsRepository.save(post);
 		return this.modelMapper.map(post, PostsDto.class);
 	}
@@ -61,6 +64,7 @@ public class PostsServiceImpl implements PostsService {
 		post.setContent(postDto.getContent());
 		post.setImageUrl(postDto.getImageUrl());
 		post.setCategory(this.modelMapper.map(postDto.getCategory(), Category.class));
+		this.postsRepository.save(post);
 		return this.modelMapper.map(post, PostsDto.class);
 		
 	}
@@ -127,7 +131,12 @@ public class PostsServiceImpl implements PostsService {
 	@Override
 	public List<PostsDto> searchPost(String keyword) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Posts> posts=this.postsRepository.searchPost("%"+keyword+"%");
+		List<PostsDto> postDtos = new ArrayList<>();
+		posts.forEach((post)->{
+			postDtos.add(this.modelMapper.map(post, PostsDto.class));
+		});
+		return postDtos;
 	}
 
 }

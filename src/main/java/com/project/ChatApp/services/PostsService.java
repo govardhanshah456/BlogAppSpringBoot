@@ -2,6 +2,8 @@ package com.project.ChatApp.services;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
+
 import com.project.ChatApp.payloads.PostResponse;
 import com.project.ChatApp.payloads.PostsDto;
 
