@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ChatApp.payloads.JwtAuthRequest;
 import com.project.ChatApp.payloads.JwtAuthResponse;
+import com.project.ChatApp.payloads.UserDto;
+import com.project.ChatApp.repositories.RoleRepository;
+import com.project.ChatApp.services.UserService;
 import com.project.ChatApp.utils.JwtUtil;
 import java.lang.*;
 
@@ -31,6 +35,9 @@ public class AuthController {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired 
+	private UserService userService;
 	
 	@PostMapping("/login")
 	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest req) {
@@ -51,6 +58,21 @@ public class AuthController {
 	        throw new UsernameNotFoundException("invalid user request..!!");
 	    }
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			throw new UsernameNotFoundException("Authentication failed: " + e.getMessage());
+		    
+		}
+	}
+	
+	@PostMapping("/register")
+	public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
+		
+		try {
+			UserDto user = this.userService.registerUser(userDto);
+	        return new ResponseEntity(user,HttpStatus.CREATED);
+	    }
+		
 		catch(Exception e) {
 			e.printStackTrace();
 			throw new UsernameNotFoundException("Authentication failed: " + e.getMessage());

@@ -43,7 +43,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/api/delete/{id}")
     ResponseEntity<String> deleteUser(@PathVariable("id") Long id){
         this.userService.deleteUser(id);

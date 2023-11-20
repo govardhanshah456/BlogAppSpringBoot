@@ -1,6 +1,11 @@
 package com.project.ChatApp.payloads;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.project.ChatApp.entities.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -25,4 +30,5 @@ public class UserDto {
     private String email;
     private String about;
     private String password;
+    private List<Role> roles = new ArrayList();
 }

@@ -55,12 +55,15 @@ public class User implements UserDetails{
     List<Posts>posts=new ArrayList();
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name="user_role", joinColumns=@JoinColumn(name="user",referencedColumnName="id"), inverseJoinColumns = @JoinColumn(name="role",referencedColumnName="id"))
-    List<Role>role=new ArrayList<Role>();
+    List<Role>roles=new ArrayList();
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		List<SimpleGrantedAuthority> collect = this.role.stream().map((role)->new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+		List<SimpleGrantedAuthority> collect = this.roles.stream().map((role)->new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 		return collect;
+	}
+	public List<Role> getRoles(){
+		return this.roles;
 	}
 	@Override
 	public String getPassword() {

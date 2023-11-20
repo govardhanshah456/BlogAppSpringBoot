@@ -17,8 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.nio.file.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +55,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleSecurityException(Exception exception) {
         ProblemDetail errorDetail = null;
-
         // TODO send this stack trace to an observability tool
         exception.printStackTrace();
 
